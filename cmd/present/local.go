@@ -34,6 +34,18 @@ func main() {
 	flag.BoolVar(&present.NotesEnabled, "notes", false, "enable presenter notes (press 'N' from the browser to display them)")
 	flag.Parse()
 
+	if os.Getenv("GAE_ENV") == "standard" {
+		log.Print("Configuring for App Engine Standard")
+		port := os.Getenv("PORT")
+		*httpAddr = fmt.Sprintf("0.0.0.0:%s", port)
+		pwd, err := os.Getwd()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Couldn't get pwd: %v\n", err)
+			os.Exit(1)
+		}
+		*basePath = pwd
+	}
+
 	if *basePath == "" {
 		p, err := build.Default.Import(basePkg, "", build.FindOnly)
 		if err != nil {

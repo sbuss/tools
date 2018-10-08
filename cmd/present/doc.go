@@ -19,32 +19,27 @@ Usage of present:
 The setup of the Go version of NaCl is documented at:
 https://golang.org/wiki/NativeClient
 
-To use with App Engine, copy the tools/cmd/present directory to the root of
-your application and create an app.yaml file similar to this:
+To use with App Engine, copy the files in the tools/cmd/present directory to
+the root of your application and create an app.yaml file similar to this:
 
-    application: [application]
-    version: [version]
-    runtime: go
-    api_version: go1
+    runtime: go111
 
     handlers:
     - url: /favicon.ico
-      static_files: present/static/favicon.ico
-      upload: present/static/favicon.ico
+      static_files: static/favicon.ico
+      upload: static/favicon.ico
     - url: /static
-      static_dir: present/static
-      application_readable: true
+      static_dir: static
     - url: /.*
-      script: _go_app
+      script: auto
 
-    # nobuild_files is a regexp that identifies which files to not build.  It
-    # is useful for embedding static assets like code snippets and preventing
-    # them from producing build errors for your project.
-    nobuild_files: [path regexp for talk materials]
+Present can be tested locally by running
 
-Present then can be tested in a local App Engine environment with
+    GAE_ENV=standard go run
 
-    goapp serve
+and deployed via
+
+    gcloud app deploy
 
 Input files are named foo.extension, where "extension" defines the format of
 the generated output. The supported formats are:
@@ -54,4 +49,4 @@ the generated output. The supported formats are:
 The present file format is documented by the present package:
 http://godoc.org/golang.org/x/tools/present
 */
-package main // import "golang.org/x/tools/cmd/present"
+package main
